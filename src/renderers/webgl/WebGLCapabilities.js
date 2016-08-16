@@ -1,4 +1,26 @@
-THREE.WebGLCapabilities = function ( gl, extensions, parameters ) {
+function WebGLCapabilities( gl, extensions, parameters ) {
+
+	var maxAnisotropy;
+
+	function getMaxAnisotropy() {
+
+		if ( maxAnisotropy !== undefined ) return maxAnisotropy;
+
+		var extension = extensions.get( 'EXT_texture_filter_anisotropic' );
+
+		if ( extension !== null ) {
+
+			maxAnisotropy = gl.getParameter( extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT );
+
+		} else {
+
+			maxAnisotropy = 0;
+
+		}
+
+		return maxAnisotropy;
+
+	}
 
 	function getMaxPrecision( precision ) {
 
@@ -30,9 +52,10 @@ THREE.WebGLCapabilities = function ( gl, extensions, parameters ) {
 
 	}
 
+	this.getMaxAnisotropy = getMaxAnisotropy;
 	this.getMaxPrecision = getMaxPrecision;
 
-	this.precision = parameters.precision !== undefined ? parameters.precision : 'highp',
+	this.precision = parameters.precision !== undefined ? parameters.precision : 'highp';
 	this.logarithmicDepthBuffer = parameters.logarithmicDepthBuffer !== undefined ? parameters.logarithmicDepthBuffer : false;
 
 	this.maxTextures = gl.getParameter( gl.MAX_TEXTURE_IMAGE_UNITS );
@@ -64,4 +87,7 @@ THREE.WebGLCapabilities = function ( gl, extensions, parameters ) {
 
 	}
 
-};
+}
+
+
+export { WebGLCapabilities };
